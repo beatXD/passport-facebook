@@ -6,7 +6,11 @@ const express = require('express')
 var FacebookStrategy = require('passport-facebook').Strategy
 const cors = require("cors");
 
-
+const CLIENT_PORT = 'http://localhost:3001/'
+const CLIENT_ID = '734439197350624'
+const CLIENT_SECRET = 'b25eeef8460a1808baa969c855a39c5f'
+const ngrok =  'https://44c1e46eacf5.ngrok.io'
+const dbport = 6000;
 
 const app = express()
 
@@ -17,7 +21,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-    origin: 'http://localhost:3001',
+    origin: CLIENT_PORT,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true
   }));
@@ -25,15 +29,7 @@ app.use(cors({
 app.use(express.static('client')); 
 app.use(express.json());
 
-const dbport = 6000;
-
 app.listen(dbport, () => console.log(`Server started on port ${dbport}`));
-
-var CLIENT_ID = '734439197350624'
-var CLIENT_SECRET = 'b25eeef8460a1808baa969c855a39c5f'
-
-const ngrok =  'https://44c1e46eacf5.ngrok.io'
-
 
 passport.serializeUser(function(user, done) { done(null, user) })
 passport.deserializeUser(function(obj, done) { done(null, obj) })
@@ -49,13 +45,19 @@ passport.use(new FacebookStrategy({
   }
 ))
 
-app.get('/logout', (req, res) => { req.logout(); res.redirect('http://localhost:3001/'); })
+//Example Facebook 
+// https://44c1e46eacf5.ngrok.io/
+// https://44c1e46eacf5.ngrok.io/auth/facebook
+// https://44c1e46eacf5.ngrok.io/auth/facebook/callback
+// https://44c1e46eacf5.ngrok.io/login/success
+
+app.get('/logout', (req, res) => { req.logout(); res.redirect(CLIENT_PORT); })
 
 app.get('/', (req, res) => { res.send('please login') })
 
 app.get('/auth/facebook', passport.authenticate('facebook'))
 
-app.get('/auth/facebook/callback',passport.authenticate('facebook', { successRedirect: 'http://localhost:3001/', failureRedirect: '/' } ))
+app.get('/auth/facebook/callback',passport.authenticate('facebook', { successRedirect: CLIENT_PORT, failureRedirect: '/' } ))
 
 app.get('/login/success', (req, res) => { 
   if (req.user) {
