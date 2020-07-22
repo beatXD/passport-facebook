@@ -3,27 +3,27 @@ import "./App.css";
 
 const ngrok = "https://44c1e46eacf5.ngrok.io";
 
-const  App = () => {
+const App = () => {
+  const [data, setData] = useState();
 
-  const [data, setData] = useState()
+  const [loggedin, setloggedin] = useState(false);
 
-  const [loggedin, setloggedin] = useState(null)
-
-  useEffect(()=> {
-    console.log('useEffect')
-    getdata()
-
-  },[])
+  useEffect(() => {
+    console.log("useEffect");
+    getdata();
+  }, []);
 
   const login = async () => {
     window.location.href = `${ngrok}/auth/facebook`;
   };
 
   const logout = async () => {
+    await setloggedin(false);
     window.location.href = `${ngrok}/logout`;
   };
 
   const getdata = async () => {
+    await setloggedin(true);
     const response = await fetch(`${ngrok}/login/success`, {
       credentials: "include",
       headers: {
@@ -33,40 +33,44 @@ const  App = () => {
       },
     });
     const data = await response.json();
-    if ( data ) {
-      await setData(data.user)
-      await setloggedin(true)
-    } else {
-      await setloggedin(false)
+    if (data) {
+      await setData(data.user);
+    }else{
+      await setloggedin(false);
     }
-
   };
+
+  console.log(loggedin);
 
   return (
     <div className="App">
       <header className="App-header">
-       
         <div>
-          <button onClick={login}> Login </button>
-          <button onClick={logout}> logout </button>
-        </div>
 
-        <br />
-
-        {loggedin === true
-        ? <div>
-          <p> ID : {data !== undefined ? data.id : 'undefiend'} </p>
-          <p> Name : {data !== undefined ? data.displayName : 'undefiend' } </p>
-          <p> Provider : {data !== undefined ? data.provider : 'undefiend' } </p>
+          <div>
+            <button onClick={login}> Login </button>
+            <button onClick={logout}> logout </button>
           </div>
-        : loggedin === false
-        ? <div> Please Login ... </div>
-        : <div> Loading ... </div>
-        }
 
+          <br />
+
+          { loggedin === true && data === undefined 
+          ? (<div> Loading ... </div>) 
+          : loggedin === true && data !== undefined 
+          ? (
+            <div>
+              <p> ID : {data.id} </p>
+              <p> Name : {data.displayName}</p>
+              <p>Provider : {data.provider}</p>
+            </div>
+            ) 
+          : loggedin === false 
+          ? (<div> Please Login ... </div>) 
+          : ("")}
+        </div>
       </header>
     </div>
   );
-}
+};
 
 export default App;
