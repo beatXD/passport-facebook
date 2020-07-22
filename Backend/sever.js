@@ -9,7 +9,7 @@ const cors = require("cors");
 const CLIENT_PORT = 'http://localhost:3001/'
 const CLIENT_ID = '734439197350624'
 const CLIENT_SECRET = 'b25eeef8460a1808baa969c855a39c5f'
-const ngrok =  'https://44c1e46eacf5.ngrok.io'
+const ngrok =  'https://7265fd831d1b.ngrok.io'
 const dbport = 6000;
 
 const app = express()
@@ -24,7 +24,9 @@ app.use(cors({
     origin: CLIENT_PORT,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true
+    
   }));
+  
 
 app.use(express.static('client')); 
 app.use(express.json());
@@ -37,7 +39,8 @@ passport.deserializeUser(function(obj, done) { done(null, obj) })
 passport.use(new FacebookStrategy({
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    callbackURL: `${ngrok}/auth/facebook/callback`
+    callbackURL: `${ngrok}/auth/facebook/callback`,
+    profileFields: ['id', 'displayName', 'photos', 'email', 'gender', 'name'],
   },
   function(accessToken, refreshToken, profile, done) {
     //ส่วนนี้จะเอาข้อมูลที่ได้จาก facebook ไปทำอะไรต่อก็ได้
