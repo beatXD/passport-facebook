@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
-const ngrok = "https://44c1e46eacf5.ngrok.io";
+const ngrok = "https://fe5e5a8a3c6f.ngrok.io";
 
 const App = () => {
   const [data, setData] = useState();
@@ -30,17 +30,19 @@ const App = () => {
         Accept: "application/json",
         "Content-Type": "application/json",
         "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": `http://localhost:3001`,
       },
     });
     const data = await response.json();
     if (data) {
       await setData(data.user);
-    }else{
+    } else {
       await setloggedin(false);
     }
   };
 
   console.log(loggedin);
+  console.log('data',data)
 
   return (
     <div className="App">
@@ -59,9 +61,11 @@ const App = () => {
           : loggedin === true && data !== undefined 
           ? (
             <div>
+              <img src={data.photos[0].value} />
               <p> ID : {data.id} </p>
-              <p> Name : {data.displayName}</p>
-              <p>Provider : {data.provider}</p>
+              <p> DisplayName : {data.displayName}</p>
+              <p> Name : {data.name.familyName}  {data.name.givenName} </p>
+              <p> Provider : {data.provider}</p>
             </div>
             ) 
           : loggedin === false 

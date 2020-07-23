@@ -6,10 +6,14 @@ const express = require('express')
 var FacebookStrategy = require('passport-facebook').Strategy
 const cors = require("cors");
 
-const CLIENT_PORT = 'http://localhost:3001/'
+const CLIENT_PORT = 'http://localhost:3001'
+
+const ngrok =  'https://fe5e5a8a3c6f.ngrok.io'
+
 const CLIENT_ID = '734439197350624'
+
 const CLIENT_SECRET = 'b25eeef8460a1808baa969c855a39c5f'
-const ngrok =  'https://7265fd831d1b.ngrok.io'
+
 const dbport = 6000;
 
 const app = express()
