@@ -49,6 +49,8 @@ const App = () => {
       <header className="App-header">
 
         <div>
+          <div> LOGIN FACEBOOK </div>
+          <br />
           <div>
             <button onClick={login}> Login </button>
             <button onClick={logout}> logout </button>
