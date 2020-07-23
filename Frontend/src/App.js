@@ -56,21 +56,19 @@ const App = () => {
 
           <br />
 
-          { loggedin === true && data === undefined 
-          ? (<div> Loading ... </div>) 
+          { loggedin === false
+          ? (<div> Please Login ... </div>) 
           : loggedin === true && data !== undefined 
           ? (
             <div>
-              <img src={data.photos[0].value} />
+              <img className="profile" src={data.photos[0].value} />
               <p> ID : {data.id} </p>
               <p> DisplayName : {data.displayName}</p>
               <p> Name : {data.name.familyName}  {data.name.givenName} </p>
               <p> Provider : {data.provider}</p>
             </div>
             ) 
-          : loggedin === false 
-          ? (<div> Please Login ... </div>) 
-          : ("")}
+          : (<div> Loading ... </div>) }
         </div>
         
       </header>
