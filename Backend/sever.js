@@ -18,6 +18,13 @@ const dbport = 6000;
 
 const app = express()
 
+//Example Facebook 
+// https://44c1e46eacf5.ngrok.io/
+// https://44c1e46eacf5.ngrok.io/auth/facebook
+// https://44c1e46eacf5.ngrok.io/auth/facebook/callback
+// https://44c1e46eacf5.ngrok.io/login/success
+// https://44c1e46eacf5.ngrok.io/logout
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }))
@@ -31,11 +38,11 @@ app.use(cors({
     
   }));
   
-
 app.use(express.static('client')); 
 app.use(express.json());
 
 app.listen(dbport, () => console.log(`Server started on port ${dbport}`));
+
 
 passport.serializeUser(function(user, done) { done(null, user) })
 passport.deserializeUser(function(obj, done) { done(null, obj) })
@@ -52,21 +59,13 @@ passport.use(new FacebookStrategy({
   }
 ))
 
-//Example Facebook 
-// https://44c1e46eacf5.ngrok.io/
-// https://44c1e46eacf5.ngrok.io/auth/facebook
-// https://44c1e46eacf5.ngrok.io/auth/facebook/callback
-// https://44c1e46eacf5.ngrok.io/login/success
-
-app.get('/logout', (req, res) => { req.logout(); res.redirect(CLIENT_PORT); })
-
 app.get('/', (req, res) => { res.send('please login') })
 
 app.get('/auth/facebook', passport.authenticate('facebook'))
 
 app.get('/auth/facebook/callback',passport.authenticate('facebook', { successRedirect: CLIENT_PORT, failureRedirect: '/' } ))
 
-app.get('/login/success', (req, res) => { 
+app.get('/auth/login/success', (req, res) => { 
   if (req.user) {
     console.log(req.user)
     res.json({
@@ -77,4 +76,6 @@ app.get('/login/success', (req, res) => {
     });
   }
 })
+
+app.get('/logout', (req, res) => { req.logout(); res.redirect(CLIENT_PORT); })
 
